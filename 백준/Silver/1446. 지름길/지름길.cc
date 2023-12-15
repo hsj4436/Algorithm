@@ -1,27 +1,37 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 int N, D;
-std::vector<std::vector<int>> shortcuts;
-int answer;
+std::vector<std::vector<int>> shortcuts[10001];
+int distance[10001];
 
-void back_track(int current, int distance) {
-    for (int i = current; i < D + 1; i++) {
-        for (auto v : shortcuts) {
-            if (v[0] == i && v[1] <= D) {
-                back_track(v[1], distance + (i - current) + v[2]);
+void dijkstra() {
+    std::priority_queue<std::pair<int, int>> pq;
+    pq.push({0, 0}); // -distance, node
+
+    while (!pq.empty()) {
+        int cur = pq.top().second;
+        int d = -pq.top().first;
+        pq.pop();
+
+        for (int i = cur; i < D + 1; i++) {
+            for (auto v : shortcuts[i]) {
+                if (distance[v[0]] > d + + (i - cur) + v[1]) {
+                    distance[v[0]] = d + (i - cur) + v[1];
+                    pq.push({-(d + (i - cur) + v[1]), v[0]});
+                }
             }
         }
+        distance[D] = std::min(distance[D], d + (D - cur));
     }
-
-    answer = std::min(answer, distance + (D - current));
 }
 
 int main() {
     std::cin >> N >> D;
 
-    answer = D;
-
+    std::fill(distance, distance + 10001, D);
+    distance[0] = 0;
     for (int i = 0; i < N; i++) {
         int from = 0, to = 0, d = 0;
         std::cin >> from >> to >> d;
@@ -29,16 +39,19 @@ int main() {
         if (to - from <= d) {
             continue;
         }
+
+        if (to > D) {
+            continue;
+        }
         std::vector<int> v;
-        v.push_back(from);
         v.push_back(to);
         v.push_back(d);
-        shortcuts.push_back(v);
+        shortcuts[from].push_back(v);
     }
 
-    back_track(0, 0);
+    dijkstra();
 
-    std::cout << answer << "\n";
+    std::cout << distance[D] << "\n";
 
     return 0;
 }
