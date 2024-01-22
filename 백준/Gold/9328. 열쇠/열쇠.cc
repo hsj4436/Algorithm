@@ -1,168 +1,114 @@
 #include <iostream>
 #include <queue>
-#include <vector>
-#include <map>
+#include <cstring>
 
 int TC;
 int H, W;
-char building[101][101];
-bool visited[101][101];
-std::vector<std::pair<int, int>> entrances;
-bool keys[26];
-std::queue<std::pair<int, int>> blocked[26];
-int answer = 0;
+char building[102][102];
+bool visited[102][102];
+bool key[26];
 
-int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
-
-void init() {
-    answer = 0;
-    
-    entrances.clear();
-    
-    for (int i = 0; i < 26; i++) {
-        while (!blocked[i].empty()) {
-            blocked[i].pop();
-        }
-    }
-    
-    for (int i = 0; i < 101; i++) {
-        for (int j = 0; j < 101; j++) {
-            building[i][j] = '*';
-            visited[i][j] = false;
-        }
-    }
-
-    for (int i = 0; i < 26; i++) {
-        keys[i] = false;
-    }
-}
-
-void bfs() {
-    std::queue<std::pair<int, int>> trace;
-    for (auto p : entrances) {
-        if ('A' <= building[p.first][p.second] && building[p.first][p.second] <= 'Z') {
-            if (keys[building[p.first][p.second] - 'A']) {
-                visited[p.first][p.second] = true;
-                trace.push(p);
-            } else {
-                blocked[building[p.first][p.second] - 'A'].push(p);
-            }
-        } else {
-            visited[p.first][p.second] = true;
-            trace.push(p);
-        }
-    }
-
-    while (!trace.empty()) {
-        auto cur = trace.front();
-        trace.pop();
-
-        for (int i = 0; i < 4; i++) {
-            int nx = cur.first + dx[i];
-            int ny = cur.second + dy[i];
-
-            if (nx < 0 || nx > H - 1 || ny < 0 || ny > W - 1) {
-                continue;
-            }
-            if (visited[nx][ny] || building[nx][ny] == '*') {
-                continue;
-            }
-            if ('a' <= building[nx][ny] && building[nx][ny] <= 'z') {
-                keys[building[nx][ny] - 'a'] = true;
-                visited[nx][ny] = true;
-                while (!blocked[building[nx][ny] - 'a'].empty()) {
-                    auto key_point = blocked[building[nx][ny] - 'a'].front();
-                    blocked[building[nx][ny] - 'a'].pop();
-                    visited[key_point.first][key_point.second] = true;
-                    trace.push(key_point);
-                }
-                trace.push({nx, ny});
-            } else if ('A' <= building[nx][ny] && building[nx][ny] <= 'Z') {
-                if (keys[building[nx][ny] - 'A']) {
-                    visited[nx][ny] = true;
-                    trace.push({nx, ny});
-                } else {
-                    blocked[building[nx][ny] - 'A'].push({nx, ny});
-                }
-            } else if (building[nx][ny] == '.'){
-                visited[nx][ny] = true;
-                trace.push({nx, ny});
-            } else {
-                answer++;
-                visited[nx][ny] = true;
-                trace.push({nx, ny});
-            }
-        }
-    }
-}
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, -1, 0, 1};
 
 int main() {
     std::cin >> TC;
 
     for (int tc = 0; tc < TC; tc++) {
-        init();
+        std::memset(visited, false, sizeof(visited));
+        std::memset(key, false, sizeof(key));
         std::cin >> H >> W;
-        for (int i = 0; i < H; i++) {
+        for (int i = 0; i < H + 2; i++) {
+            for (int j = 0; j < W + 2; j++) {
+                building[i][j] = '.';
+            }
+        }
+
+        std::queue<std::pair<int, int>> movable;
+        std::queue<std::pair<int, int>> blocked[26];
+        for (int i = 1; i < H + 1; i++) {
             std::string row;
             std::cin >> row;
-            for (int j = 0; j < W; j++) {
-                building[i][j] = row[j];
-            }
-        }
-        std::string key;
-        std::cin >> key;
-        if (key != "0") {
-            for (char ch : key) {
-                keys[ch - 'a'] = true;
+            for (int j = 1; j < W + 1; j++) {
+                building[i][j] = row[j - 1];
             }
         }
 
-        for (int i = 0; i < W; i++) {
-            if (building[0][i] != '*') {
-                if (building[0][i] == '$') {
-                    answer++;
-                }
-                if ('a' <= building[0][i] && building[0][i] <= 'z') {
-                    keys[building[0][i] - 'a'] = true;
-                }
-                entrances.push_back({0, i});
-            }
-            if (building[H - 1][i] != '*') {
-                if (building[H - 1][i] == '$') {
-                    answer++;
-                }
-                if ('a' <= building[H - 1][i] && building[H - 1][i] <= 'z') {
-                    keys[building[H - 1][i] - 'a'] = true;
-                }
-                entrances.push_back({H - 1, i});
+        std::string keys;
+        std::cin >> keys;
+        if (keys != "0") {
+            for (auto c : keys) {
+                key[c - 'a'] = true;
             }
         }
 
-        for (int i = 1; i < H - 1; i++) {
-            if (building[i][0] != '*') {
-                if (building[i][0] == '$') {
-                    answer++;
+        for (int i = 0; i < H + 2; i++) {
+            if (i == 0 || i == H + 1) {
+                for (int j = 0; j < W + 2; j++) {
+                    if (building[i][j] == '.' && !visited[i][j]) {
+                        visited[i][j] = true;
+                        movable.push({i, j});
+                    }
                 }
-                if ('a' <= building[i][0] && building[i][0] <= 'z') {
-                    keys[building[i][0] - 'a'] = true;
+            } else {
+                if (building[i][0] == '.' && !visited[i][0]) {
+                    visited[i][0] = true;
+                    movable.push({i, 0});
                 }
-                entrances.push_back({i, 0});
-            }
-            if (building[i][W - 1] != '*') {
-                if (building[i][W - 1] == '$') {
-                    answer++;
+                if (building[i][W + 1] == '.' && !visited[i][W + 1]) {
+                    visited[i][W + 1] = true;
+                    movable.push({i, W + 1});
                 }
-                if ('a' <= building[i][W - 1] && building[i][W - 1] <= 'z') {
-                    keys[building[i][W - 1] - 'a'] = true;
-                }
-                entrances.push_back({i, W - 1});
             }
         }
 
-        bfs();
+        int answer = 0;
+        while (!movable.empty()) {
+            int x = movable.front().first;
+            int y = movable.front().second;
+            movable.pop();
+
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if (nx < 1 || nx > H || ny < 1 || ny > W) {
+                    continue;
+                }
+
+                if (visited[nx][ny] || building[nx][ny] == '*') {
+                    continue;
+                }
+
+                visited[nx][ny] = true;
+                if (building[nx][ny] == '.') {
+                    movable.push({nx, ny});
+                } else if (building[nx][ny] == '$') {
+                    movable.push({nx, ny});
+                    answer++;
+                } else if ('a' <= building[nx][ny] && building[nx][ny] <= 'z') {
+                    if (key[building[nx][ny] - 'a']) {
+                        movable.push({nx, ny});
+                    } else {
+                        key[building[nx][ny] - 'a'] = true;
+                        movable.push({nx, ny});
+                        while (!blocked[building[nx][ny] - 'a'].empty()) {
+                            movable.push(blocked[building[nx][ny] - 'a'].front());
+                            blocked[building[nx][ny] - 'a'].pop();
+                        }
+                    }
+                } else if ('A' <= building[nx][ny] && building[nx][ny] <= 'Z') {
+                    if (key[building[nx][ny] - 'A']) {
+                        movable.push({nx, ny});
+                    } else {
+                        blocked[building[nx][ny] - 'A'].push({nx, ny});
+                    }
+                }
+            }
+        }
 
         std::cout << answer << "\n";
     }
+
     return 0;
 }
