@@ -1,25 +1,14 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <algorithm>
-
-#define PII std::pair<int, int>
-
-struct compare {
-    bool operator () (PII a, PII b) {
-        if (a.first == b.first) {
-            return a.second > b.second;
-        } else {
-            return a.first > b.first;
-        }
-    }
-};
 
 int M, N, L;
 std::vector<int> guns;
-std::priority_queue<PII, std::vector<PII>, compare> animals;
 
 int main() {
+    std::cin.tie(NULL);
+    std::ios::sync_with_stdio(false);
+
     std::cin >> M >> N >> L;
     
     guns.resize(M);
@@ -28,26 +17,25 @@ int main() {
     }
     
     std::sort(guns.begin(), guns.end());
-    
-    int a, b;
-    for (int i = 0; i < N; i++) {
-        std::cin >> a >> b;
-        animals.push({a, b});
-    }
 
     int cnt = 0;
-    for (int i = 0; i < M; i++) {
-        while (!animals.empty()) {
-            int x = animals.top().first;
-            int y = animals.top().second;
-            if (std::abs(guns[i] - x) + y <= L) {
+    int x, y;
+    for (int i = 0; i < N; i++) {
+        std::cin >> x >> y;
+        if (y > L) {
+            continue;
+        }
+        int left = 0, right = M - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (std::abs(guns[mid] - x) + y <= L) {
                 cnt++;
-                animals.pop();
+                break;
             } else {
-                if (x <= guns[i]) {
-                    animals.pop();
+                if (guns[mid] <= x) {
+                    left = mid + 1;
                 } else {
-                    break;
+                    right = mid - 1;
                 }
             }
         }
