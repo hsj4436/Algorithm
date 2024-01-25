@@ -1,6 +1,8 @@
 #include <iostream>
 #include <algorithm>
 
+#define PII std::pair<int, int>
+
 std::string N;
 
 int main() {
@@ -8,21 +10,15 @@ int main() {
 
     std::sort(N.begin(), N.end(), [&](char a, char b) {return a > b;});
 
-    std::string answer;
-    do {
-        int res = 0;
-        for (int i = 0; i < N.size(); i++) {
-            res = (res * 10 + (N[i] - '0')) % 30;
-        }
-        if (res == 0) {
-            answer = std::max(answer, N);
-        }
-    } while (std::next_permutation(N.begin(), N.end()));
-
-    if (answer.empty()) {
-        std::cout << "-1\n";
+    long long sum = 0;
+    for (int i = 0; i < N.size(); i++) {
+        sum += N[i] - '0';
+    }
+    
+    if (sum % 3 == 0 && N[N.size() - 1] == '0') {
+        std::cout << N << "\n";
     } else {
-        std::cout << answer << "\n";
+        std::cout << "-1\n";
     }
 
     return 0;
