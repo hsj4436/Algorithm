@@ -19,25 +19,19 @@ int main() {
         std::sort(lego, lego + N);
 
         bool found = false;
-        long long diff = -1;
         long long L1, L2;
-        for (int i = 0; i < N - 1; i++) {
-            int left = i + 1, right = N - 1;
-            while (left <= right) {
-                int mid = (left + right) / 2;
-                if (lego[i] + lego[mid] < X) {
-                    left = mid + 1;
-                } else if (lego[i] + lego[mid] > X) {
-                    right = mid - 1;
-                } else {
-                    found = true;
-                    if (lego[mid] - lego[i] > diff) {
-                        diff = lego[mid] - lego[i];
-                        L1 = lego[i];
-                        L2 = lego[mid];
-                    }
-                    break;
-                }
+        int left = 0, right = N - 1;
+        while (left < right) {
+            long long sum = lego[left] + lego[right];
+            if (sum < X) {
+                left++;
+            } else if (sum > X) {
+                right--;
+            } else {
+                found = true;
+                L1 = lego[left];
+                L2 = lego[right];
+                break;
             }
         }
         if (found) {
