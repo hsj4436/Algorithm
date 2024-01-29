@@ -17,15 +17,9 @@ int main() {
         if (std::abs(sum) < std::abs(diff)) {
             diff = sum;
         }
-        if (L[left] < 0 && L[right] >= 0) {
-            if (std::abs(L[left]) < L[right]) {
-                right--;
-            } else {
-                left++;
-            }
-        } else if (L[left] >= 0 && L[right] >= 0) {
+        if (sum > 0) {
             right--;
-        } else if (L[left] < 0 && L[right] < 0){
+        } else {
             left++;
         }
     }
