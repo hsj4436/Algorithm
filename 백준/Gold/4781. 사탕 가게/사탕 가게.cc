@@ -5,7 +5,7 @@ int N, M;
 float f_M;
 int calories[5005];
 int prices[5005];
-int dp[5005][10010];
+int dp[10010];
 
 int main() {
     std::cin.tie(NULL);
@@ -22,25 +22,21 @@ int main() {
         for (int i = 1; i < N + 1; i++) {
             std::cin >> calories[i] >> p;
             prices[i] = (int)(p * 100.0 + 0.5);
-            for (int j = 0; j < M + 1; j++) {
-                dp[i][j] = 0;
-            }
+        }
+        
+        for (int i = 0; i < M + 1; i++) {
+            dp[i] = 0;
         }
 
-        for (int i = 1; i < N + 1; i++) {
-            for (int j = 0; j < M + 1; j++) {
-                if (j - prices[i] >= 0) {
-                    dp[i][j] = std::max(dp[i][j], std::max(dp[i - 1][j - prices[i]] + calories[i], dp[i][j - prices[i]] + calories[i]));
+        for (int i = 1; i < M + 1; i++) {
+            for (int j = 1; j < N + 1; j++) {
+                if (i - prices[j] >= 0) {
+                    dp[i] = std::max(dp[i], dp[i - prices[j]] + calories[j]);
                 }
-                dp[i][j] = std::max(dp[i][j], dp[i - 1][j]);
             }
         }
 
-        int answer = 0;
-        for (int i = 1; i < N + 1; i++) {
-            answer = std::max(answer, dp[i][M]);
-        }
-        std::cout << answer << "\n";
+        std::cout << dp[M] << "\n";
     }
     return 0;
 }
