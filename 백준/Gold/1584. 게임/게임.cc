@@ -6,8 +6,8 @@
 int N;
 int X1, Y1, X2, Y2;
 int M;
-int cell[502][502];
-int visited[502][502];
+int cell[502][502] = {{0, }, };
+bool visited[502][502];
 
 int dx[4] = {-1, 0, 1, 0};
 int dy[4] = {0, -1, 0, 1};
@@ -41,29 +41,24 @@ int main() {
         }
         for (int j = X1; j < X2 + 1; j++) {
             for (int k = Y1; k < Y2 + 1; k++) {
-                cell[j][k] = 2;
+                visited[j][k] = true;
             }
         }
     }
 
-    for (int i = 0; i < 501; i++) {
-        for (int j = 0; j < 501; j++) {
-            visited[i][j] = 250001;
-        }
-    }
-
-    std::queue<std::pair<int, PII>> q;
-    q.push({0, {0, 0}});
-    visited[0][0] = 0;
+    std::deque<std::pair<int, PII>> q;
+    q.push_back({0, {0, 0}});
+    visited[0][0] = true;
 
     while (!q.empty()) {
         int lost = q.front().first;
         int x = q.front().second.first;
         int y = q.front().second.second;
-        q.pop();
+        q.pop_front();
 
         if (x == 500 && y == 500) {
-            continue;
+            std::cout << lost << "\n";
+            return 0;
         }
 
         for (int i = 0; i < 4; i++) {
@@ -74,20 +69,18 @@ int main() {
                 continue;
             }
 
-            if (cell[nx][ny] == 2) {
-                continue;
-            }
-
-            if (cell[nx][ny] == 1 && lost + 1 < visited[nx][ny]) {
-                visited[nx][ny] = lost + 1;
-                q.push({lost + 1, {nx, ny}});
-            } else if (cell[nx][ny] == 0 && lost < visited[nx][ny]) {
-                visited[nx][ny] = lost;
-                q.push({lost, {nx, ny}});
+            if (!visited[nx][ny]) {
+                visited[nx][ny] = true;
+                if (cell[nx][ny] == 1) {
+                    q.push_back({lost + 1, {nx, ny}});
+                } else {
+                    q.push_front({lost, {nx, ny}});
+                }
             }
         }
     }
 
-    std::cout << (visited[500][500] == 250001 ? -1 : visited[500][500]) << "\n";
+    std::cout << "-1\n";
+
     return 0;
 }
