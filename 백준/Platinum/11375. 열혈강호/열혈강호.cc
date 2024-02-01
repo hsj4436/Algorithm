@@ -4,15 +4,15 @@
 
 int N, M;
 std::vector<int> graph[1001];
-bool is_assigned[1001];
+bool visited[1001];
 int assigned_worker[1001];
 
 bool dfs(int worker) {
     for (int job : graph[worker]) {
-        if (is_assigned[job]) {
+        if (visited[job]) {
             continue;
         }
-        is_assigned[job] = true;
+        visited[job] = true;
         if (assigned_worker[job] == 0 || dfs(assigned_worker[job])) {
             assigned_worker[job] = worker;
             return true;
@@ -36,7 +36,7 @@ int main() {
 
     int answer = 0;
     for (int i = 1; i < N + 1; i++) {
-        std::memset(is_assigned, false, sizeof(is_assigned));
+        std::memset(visited, false, sizeof(visited));
         if (dfs(i)) {
             answer++;
         }
