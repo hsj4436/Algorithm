@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 int H, W;
 std::vector<int> heights;
@@ -13,39 +12,15 @@ int main() {
     }
 
     int answer = 0;
-    int left = 0;
-    for (int i = 0; i < W;) {
-        int it = -1;
-        for (int  j = left + 1; j < W; j++) {
-            if (heights[j] >= heights[left]) {
-                it = j;
-                break;
-            }
+    for (int i = 1; i < W - 1; i++) {
+        int left = 0, right = 0;
+        for (int j = i - 1; j > -1; j--) {
+            left = std::max(left, heights[j]);
         }
-        if (it == -1) {
-            int max_height = 0, max_index = 0;
-            for (int j = left + 1; j < W; j++) {
-                if (heights[j] > max_height) {
-                    max_height = heights[j];
-                    max_index = j;
-                }
-            }
-            if (max_height == 0) {
-                break;
-            }
-            it = max_index;
-            for (int j = left + 1; j < it; j++) {
-                answer += heights[it] - heights[j];
-            }
-            left = it;
-            i = left;
-        } else {
-            for (int j = left; j < it; j++) {
-                answer += heights[left] - heights[j];
-            }
-            i = it;
-            left = it;
+        for (int j = i + 1; j < W; j++) {
+            right = std::max(right, heights[j]);
         }
+        answer += std::max(0, std::min(left, right) - heights[i]);
     }
 
     std::cout << answer << "\n";
