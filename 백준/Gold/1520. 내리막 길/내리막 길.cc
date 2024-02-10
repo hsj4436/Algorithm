@@ -1,23 +1,14 @@
 #include <iostream>
-#include <queue>
 
 int M, N;
 int map[501][501];
 int dp[501][501];
-bool visited[501][501];
 
 int dx[4] = {-1, 0, 1, 0};
 int dy[4] = {0, -1, 0, 1};
 
-int dfs(int x, int y) {
-    if (dp[x][y] != 0) {
-        return dp[x][y];
-    }
-
-    if (x == M - 1 && y == N - 1) {
-        return 1;
-    }
-
+int sol(int x, int y) {
+    dp[x][y] = 0;
     for (int i = 0; i < 4; i++) {
         int nx = x + dx[i];
         int ny = y + dy[i];
@@ -27,19 +18,16 @@ int dfs(int x, int y) {
         }
 
         if (map[nx][ny] < map[x][y]) {
-            if (visited[nx][ny]) {
+            if (dp[nx][ny] != -1) {
                 dp[x][y] += dp[nx][ny];
             } else {
-                dp[x][y] += dfs(nx, ny);
+                dp[x][y] += sol(nx, ny);
             }
         }
-
     }
 
-    visited[x][y] = true;
     return dp[x][y];
 }
-
 
 int main() {
     std::cin.tie(NULL);
@@ -50,11 +38,12 @@ int main() {
     for (int i = 0; i < M; i++) {
         for (int j = 0; j < N; j++) {
             std::cin >> map[i][j];
+            dp[i][j] = -1;
         }
     }
 
-    dfs(0, 0);
+    dp[M - 1][N - 1] = 1;
+    std::cout << sol(0, 0) << "\n";
 
-    std::cout << dp[0][0] << "\n";
     return 0;
 }
