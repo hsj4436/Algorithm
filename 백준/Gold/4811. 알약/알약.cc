@@ -1,28 +1,27 @@
 #include <iostream>
 
 int N;
-long long dp[31][31];
+long long dp[31];
 
-long long sol(int w, int h) {
-    if (w == 0) {
+long long sol(int n) {
+    if (n <= 1) {
         return 1;
     }
 
-    if (dp[w][h] != -1) {
-        return dp[w][h];
+    if (dp[n] != -1) {
+        return dp[n];
     }
 
-    dp[w][h] = sol(w - 1, h + 1);
-
-    if (h > 0) {
-        dp[w][h] += sol(w, h - 1);
+    dp[n] = 0;
+    for (int i = 0; i < n; i++) {
+        dp[n] += sol(i) * sol(n - i - 1);
     }
 
-    return dp[w][h];
+    return dp[n];
 }
 
 int main() {
-
+    std::fill(dp, dp + 31, -1);
     while (true) {
         std::cin >> N;
 
@@ -30,8 +29,7 @@ int main() {
             break;
         }
 
-        std::fill(&dp[0][0], &dp[30][31], -1);
-        std::cout << sol(N, 0) << "\n";
+        std::cout << sol(N) << "\n";
     }
     return 0;
 }
