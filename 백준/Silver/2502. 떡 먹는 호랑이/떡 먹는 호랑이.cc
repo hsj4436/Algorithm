@@ -1,29 +1,25 @@
 #include <iostream>
 
-int arr[31];
+int As[31];
+int Bs[31];
 
 int main() {
     int D, K;
     std::cin >> D >> K;
 
-    for (int A = 1; A < K; A++) {
-        int left = A, right = K;
-        arr[1] = A;
-        while (left <= right) {
-            int B = (left + right) / 2;
-            arr[2] = B;
-            for (int i = 3; i < D + 1; i++) {
-                arr[i] = arr[i - 1] + arr[i - 2];
-            }
-            if (arr[D] == K) {
-                std::cout << A << "\n" << B << "\n";
-                return 0;
-            } else if (arr[D] > K) {
-                right = B - 1;
-            } else {
-                left = B + 1;
-            }
+    As[1] = 1, As[2] = 0;
+    Bs[1] = 0, Bs[2] = 1;
+    for (int i = 3; i < D + 1; i++) {
+        As[i] = As[i - 1] + As[i - 2];
+        Bs[i] = Bs[i - 1] + Bs[i - 2];
+    }
+
+    for (int i = 1; i < K; i++) {
+        if ((K - i * As[D]) % Bs[D] == 0) {
+            std::cout << i << "\n" << (K - i * As[D]) / Bs[D] << "\n";
+            return 0;
         }
     }
+
     return 0;
 }
