@@ -14,11 +14,11 @@ int main() {
     }
 
     int answer = -987654321;
-    for (int i = 1; i < M + 1; i++) {
-        for (int j = i; j < M + 1; j++) {
-            for (int a = 1; a < N + 1; a++) {
-                for (int b = a; b < N + 1; b++) {
-                    answer = std::max(answer, board[b][j] - board[b][i - 1] - board[a - 1][j] + board[a - 1][i - 1]);
+    for (int sy = 1; sy < M + 1; sy++) {
+        for (int ey = sy; ey < M + 1; ey++) {
+            for (int sx = 1; sx < N + 1; sx++) {
+                for (int ex = sx; ex < N + 1; ex++) {
+                    answer = std::max(answer, board[ex][ey] - board[sx - 1][ey] - board[ex][sy - 1] + board[sx - 1][sy - 1]);
                 }
             }
         }
