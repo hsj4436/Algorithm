@@ -1,59 +1,64 @@
 #include <iostream>
 
 int N;
-bool balls[500001]; // true - red, false - blue
+char str[500001];
 
 int main() {
     std::cin >> N;
 
-    char color;
-    for (int i = 1; i < N + 1; i++) {
-        std::cin >> color;
-        if (color == 'R') {
-            balls[i] = true;
-        }
-    }
+    std::cin >> str;
 
     // move red
     int red_move_count = 0;
-    int first_red_index = -1;
-    for (int i = N; i > 0; i--) {
-        if (balls[i]) {
-            if (first_red_index == -1) {
-                first_red_index = i;
-                if (i != N) {
-                    red_move_count++;
-                }
-            } else {
-                if (first_red_index - 1 == i) {
-                    first_red_index = i;
-                } else {
-                    red_move_count++;
-                }
+    bool streak = true;
+    for (int i = N - 1; i > -1; i--) {
+        if (str[i] == 'R') {
+            if (!streak) {
+                red_move_count++;
             }
+        } else {
+            streak = false;
         }
     }
+
+    int red_move_count2 = 0;
+    streak = true;
+    for (int i = 0; i < N; i++) {
+        if (str[i] == 'R') {
+            if (!streak) {
+                red_move_count2++;
+            }
+        } else {
+            streak = false;
+        }
+    }
+
 
     int blue_move_count = 0;
-    int first_blue_index = -1;
-    for (int i = N; i > 0; i--) {
-        if (!balls[i]) {
-            if (first_blue_index == -1) {
-                first_blue_index = i;
-                if (i != N) {
-                    blue_move_count++;
-                }
-            } else {
-                if (first_blue_index - 1 == i) {
-                    first_blue_index = i;
-                } else {
-                    blue_move_count++;
-                }
+    streak = true;
+    for (int i = N - 1; i > -1; i--) {
+        if (str[i] == 'B') {
+            if (!streak) {
+                blue_move_count++;
             }
+        } else {
+            streak = false;
         }
     }
 
-    std::cout << std::min(red_move_count, blue_move_count) << "\n";
+    int blue_move_count2 = 0;
+    streak = true;
+    for (int i = 0; i < N; i++) {
+        if (str[i] == 'B') {
+            if (!streak) {
+                blue_move_count2++;
+            }
+        } else {
+            streak = false;
+        }
+    }
+
+    std::cout << std::min(red_move_count, std::min(blue_move_count, std::min(red_move_count2, blue_move_count2))) << "\n";
 
     return 0;
 }

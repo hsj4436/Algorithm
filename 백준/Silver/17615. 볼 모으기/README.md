@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 2508 KB, 시간: 0 ms
+메모리: 2508 KB, 시간: 28 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 2월 20일 17:36:45
+2024년 2월 20일 18:27:34
 
 ### 문제 설명
 
@@ -29,17 +29,17 @@
 
 <p style="text-align: center;"><그림 1></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/347db7e2-5704-4a28-ab85-682bf30f3816/-/crop/894x162/0,228/-/preview/" style="width: 447px; height: 81px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 447px; height: 81px;"></p>
 
 <p style="text-align: center;"><그림 2></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/347db7e2-5704-4a28-ab85-682bf30f3816/-/crop/894x166/0,480/-/preview/" style="width: 447px; height: 83px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 447px; height: 83px;"></p>
 
 <p style="text-align: center;"><그림 3></p>
 
 <p>반면에 파란색 볼을 선택하여 에서 보인 것처럼 옮기면(화살표에 있는 수는 옮기는 순서를 나타낸다) 네 번을 옮겨야 같은 색의 볼끼리 모을 수 있다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/cf727ec0-1542-4ca1-bdb8-cfc695a5bdfa/-/preview/" style="width: 445px; height: 146px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 445px; height: 146px;"></p>
 
 <p style="text-align: center;"><그림 4></p>
 
