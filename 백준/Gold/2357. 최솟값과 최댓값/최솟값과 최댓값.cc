@@ -1,7 +1,7 @@
 #include <iostream>
 
 #define PII std::pair<int, int> // {min, max}
-#define INF {1000000001, -1000000001}
+#define INF {1000000001, 0}
 
 int N, M;
 int arr[100001];
@@ -34,7 +34,7 @@ PII query(int start, int end, int node, int left, int right) {
 int main() {
     std::cin.tie(NULL);
     std::ios::sync_with_stdio(false);
-    
+
     std::cin >> N >> M;
 
     for (int i = 1; i < N + 1; i++) {
