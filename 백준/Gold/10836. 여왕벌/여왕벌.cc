@@ -1,7 +1,7 @@
 #include <iostream>
 
 int M, N;
-int home[701][701];
+int inputs[1402];
 int growth[701][701];
 
 int main() {
@@ -10,57 +10,38 @@ int main() {
 
     std::cin >> M >> N;
 
-    for (int i = 0; i < M; i++) {
-        for (int j = 0; j < M; j++) {
-            home[i][j] = 1;
-        }
-    }
-
     int zeros, ones, twos;
     for (int i = 0; i < N; i++) {
         std::cin >> zeros >> ones >> twos;
-        for (int j = 0; j < M; j++) {
-            if (zeros > 0) {
-                zeros--;
-                growth[M - 1 - j][0] += 0;
-            } else if (ones > 0) {
-                ones--;
-                growth[M - 1 - j][0] += 1;
-                home[M - 1 - j][0] += 1;
-            } else {
-                twos--;
-                growth[M - 1 - j][0] += 2;
-                home[M - 1 - j][0] += 2;
-            }
+        int index = 2 * M - 2;
+        for (int j = 0; j < twos; j++) {
+            inputs[index] += 2;
+            index--;
         }
-        for (int j = 1; j < M; j++) {
-            if (zeros > 0) {
-                zeros--;
-                growth[0][j] += 0;
-            } else if (ones > 0) {
-                ones--;
-                growth[0][j] += 1;
-                home[0][j] += 1;
-            } else {
-                twos--;
-                growth[0][j] += 2;
-                home[0][j] += 2;
-            }
+        for (int j = 0; j < ones; j++) {
+            inputs[index] += 1;
+            index--;
         }
     }
-    for (int j = 1; j < M; j++) {
-        for (int k = 1; k < M; k++) {
-            int max_growth = std::max(growth[j - 1][k - 1], std::max(growth[j - 1][k], growth[j][k - 1]));
-            growth[j][k] = max_growth;
-            home[j][k] += max_growth;
-        }
+    for (int i = 2 * M - 2; i > M - 2; i--) {
+        growth[0][i - M + 1] = inputs[i];
     }
-
+    for (int i = M - 2; i > -1; i--) {
+        growth[M - 1 - i][0] = inputs[i];
+    }
     for (int i = 0; i < M; i++) {
-        for (int j = 0; j < M; j++) {
-            std::cout << home[i][j] << " ";
+        std::cout << growth[0][i] + 1 << " ";
+    }
+    std::cout << "\n";
+    for (int i = 1; i < M; i++) {
+        std::cout << growth[i][0] + 1 << " ";
+        for (int j = 1; j < M; j++) {
+            int max_growth = std::max(growth[i - 1][j - 1], std::max(growth[i - 1][j], growth[i][j - 1]));
+            growth[i][j] = max_growth;
+            std::cout << growth[i][j] + 1 << " ";
         }
         std::cout << "\n";
     }
+
     return 0;
 }
