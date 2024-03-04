@@ -1,67 +1,48 @@
 #include <iostream>
-#include <vector>
 #include <stack>
-
-std::stack<char> opr;
-std::vector<char> ans;
+#include <vector>
 
 int main() {
-    std::string inp;
-    std::cin >> inp;
+    std::string midterm;
+    std::cin >> midterm;
 
-    for(int i = 0; i < inp.length(); i++){
-        if(inp[i] >= 'A' && inp[i] <= 'Z'){
-            ans.emplace_back(inp[i]);
-        }else if(inp[i] == '+' || inp[i] == '-'){
-            if(!opr.empty()){
-                if(opr.top() == '(') opr.push(inp[i]);
-                else if(opr.top() == '*' || opr.top() == '/'){
-                    while(!opr.empty()){
-                        if(opr.top() == '(') break;
-                        ans.emplace_back(opr.top());
-                        opr.pop();
-                    }
-                    opr.push(inp[i]);
-                }else{
-                    ans.emplace_back(opr.top());
-                    opr.pop();
-                    opr.push(inp[i]);
-                }
-            }else{
-                opr.push(inp[i]);
+    std::vector<char> answer;
+    std::stack<char> operator_stk;
+
+    for (int i = 0; i < midterm.size(); i++) {
+        if ('A' <= midterm[i] && midterm[i] <= 'Z') {
+            answer.push_back(midterm[i]);
+        } else if (midterm[i] == '*' || midterm[i] == '/') {
+            while (!operator_stk.empty() && (operator_stk.top() == '*' || operator_stk.top() == '/')) {
+                answer.push_back(operator_stk.top());
+                operator_stk.pop();
             }
-        }else if(inp[i] == '*' || inp[i] == '/'){
-            if(opr.empty()){
-                opr.push(inp[i]);
-            }else{
-                if(opr.top() == '*' || opr.top() == '/'){
-                    ans.emplace_back(opr.top());
-                    opr.pop();
-                    opr.push(inp[i]);
-                }
-                else{
-                    opr.push(inp[i]);
-                }
+            operator_stk.push(midterm[i]);
+        } else if (midterm[i] == '+' || midterm[i] == '-') {
+            while (!operator_stk.empty() && operator_stk.top() != '(') {
+                answer.push_back(operator_stk.top());
+                operator_stk.pop();
             }
-        }else if(inp[i] == '(') {
-            opr.push('(');
-        }else if(inp[i] == ')'){
-            while(opr.top() != '('){
-                ans.emplace_back(opr.top());
-                opr.pop();
+            operator_stk.push(midterm[i]);
+        } else if (midterm[i] == '(') {
+            operator_stk.push(midterm[i]);
+        } else {
+            while (operator_stk.top() != '(') {
+                answer.push_back(operator_stk.top());
+                operator_stk.pop();
             }
-            opr.pop();
+            operator_stk.pop();
         }
     }
-    while(!opr.empty()){
-        ans.emplace_back(opr.top());
-        opr.pop();
+
+    while (!operator_stk.empty()) {
+        answer.push_back(operator_stk.top());
+        operator_stk.pop();
     }
 
-    for(auto it : ans){
-        std::cout << it;
+    for (char ch : answer) {
+        std::cout << ch;
     }
-
 
     return 0;
 }
