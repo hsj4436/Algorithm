@@ -2,11 +2,8 @@
 #include <vector>
 #include <algorithm>
 
-#define INF 1000000001;
 
 using namespace std;
-
-int minDistance[50001]; // minDistance[i] : i개 바위를 제거했을 때 바위 사이 최솟값
 
 int solution(int distance, vector<int> rocks, int n) {
     int answer = 0;
