@@ -8,8 +8,7 @@ int solution(vector<int> citations) {
     int answer = 0;
     sort(citations.begin(), citations.end());
     
-    
-    for (int i = 0; i < *(citations.rbegin()) + 1; i++) {
+    for (int i = 0; i < max((int)citations.size() + 1, *(citations.rbegin()) + 1); i++) {
         if (citations.end() - lower_bound(citations.begin(), citations.end(), i) >= i) {
             answer = i;
         }
