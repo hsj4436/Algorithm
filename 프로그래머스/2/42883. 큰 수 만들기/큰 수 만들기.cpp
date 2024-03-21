@@ -5,19 +5,32 @@ using namespace std;
 
 string solution(string number, int k) {
     string answer = "";
-    for (int i = 0; i < k; i++) {
-        bool erased = false;
-        for (int j = 0; j < number.size() - 1; j++) {
-            if (number[j] < number[j + 1]) {
-                number.erase(j, 1);
-                erased = true;
-                break;
+    int erased = 0;
+    for (int i = 0; i < number.size(); i++) {
+        if (answer.empty() || erased == k) {
+            answer.push_back(number[i]);
+        } else if (answer.back() < number[i]) {
+            while (!answer.empty()) {
+                if (answer.back() < number[i]) {
+                    answer.pop_back();
+                    erased++;
+                    if (erased == k) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
             }
-        }
-        if (!erased) {
-            number.pop_back();
+            answer.push_back(number[i]);
+        } else {
+            answer.push_back(number[i]);
         }
     }
-    answer = number;
+    if (erased < k) {
+        while (erased != k) {
+            answer.pop_back();
+            erased++;
+        }
+    }
     return answer;
 }
