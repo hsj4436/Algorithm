@@ -14,11 +14,11 @@ int solution(vector<vector<int>> routes) {
        }
     });
     
-    int frontEnd = routes[0][1];
+    int pivot = routes[0][1];
     for (int i = 1; i < routes.size(); i++) {
-        if (routes[i][0] > frontEnd) {
+        if (routes[i][0] > pivot) {
             answer++;
-            frontEnd = routes[i][1];
+            pivot = routes[i][1];
         }
     }
     answer++;
