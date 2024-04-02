@@ -1,7 +1,7 @@
 #include <iostream>
 
 int N, M;
-int dist[501][501];
+bool dist[501][501];
 
 int main() {
     std::cin >> N >> M;
@@ -9,7 +9,7 @@ int main() {
     for (int i = 0; i < M; i++) {
         int a, b;
         std::cin >> a >> b;
-        dist[b][a] = 1;
+        dist[a][b] = true;
     }
 
     for (int k = 1; k < N + 1; k++) {
@@ -21,7 +21,7 @@ int main() {
                 if (i == j || j == k) {
                     continue;
                 }
-                dist[i][j] = std::max(dist[i][j], (dist[i][k] & dist[k][j]));
+                dist[i][j] |= (dist[i][k] && dist[k][j]);
             }
         }
     }
