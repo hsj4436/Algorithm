@@ -1,63 +1,57 @@
 #include <iostream>
 #include <queue>
+#include <set>
 
-int N, K;
-int finalStep[10000000];
+std::string N;
+int K;
 
 int main() {
     std::cin >> N >> K;
 
-    if (N < 10 || (10 <= N && N < 100 && N % 10 == 0)) {
+    if (N.size() == 1 || (N.size() == 2 && N[1] == 0)) {
         std::cout << "-1\n";
         return 0;
     }
 
-    finalStep[N] = 0;
-    if (K % 2 == 0) {
-        finalStep[N] = K;
-    } else {
-        finalStep[N] = K - 1;
-    }
+    std::queue<std::string> Q;
+    Q.push(N);
+    for (int k = 0; k < K; k++) {
+        int queueSize = Q.size();
+        std::set<std::string> visited;
 
-    std::queue<std::pair<int, int>> q;
-    q.push({N, 0});
-    while (!q.empty()) {
-        int cur = q.front().first;
-        int step = q.front().second;
-        q.pop();
+        for (int q = 0; q < queueSize; q++) {
+            std::string cur = Q.front();
+            Q.pop();
 
-        if (step == K) {
-            finalStep[cur] = K;
-            continue;
-        }
+            if (visited.count(cur) != 0) {
+                continue;
+            }
+            visited.insert(cur);
 
-        std::string curString = std::to_string(cur);
-        for (int i = 0; i < curString.size(); i++) {
-            for (int j = i + 1; j < curString.size(); j++) {
-                if (i == 0 && curString[j] == '0') {
-                    continue;
+            for (int i = 0; i < N.size(); i++) {
+                for (int j = i + 1; j < N.size(); j++) {
+                    if (i == 0 && cur[j] == '0') {
+                        continue;
+                    }
+                    std::swap(cur[i], cur[j]);
+                    Q.push(cur);
+                    std::swap(cur[i], cur[j]);
                 }
-                std::swap(curString[i], curString[j]);
-                if (finalStep[std::stoi(curString)] == K) {
-                    std::swap(curString[i], curString[j]);
-                    continue;
-                }
-                if ((K - step - 1) % 2 == 0) {
-                    finalStep[std::stoi(curString)] = K;
-                }
-                q.push({std::stoi(curString), step + 1});
-                std::swap(curString[i], curString[j]);
             }
         }
     }
 
-    int answer = 0;
-    for (int i = 1; i < 10000000; i++) {
-        if (finalStep[i] == K) {
-            answer = i;
-        }
+    std::string answer = "0";
+    while (!Q.empty()) {
+        answer = std::max(answer, Q.front());
+        Q.pop();
     }
-    std::cout << answer << "\n";
+
+    if (answer[0] == '0') {
+        std::cout << "-1\n";
+    } else {
+        std::cout << answer << "\n";
+    }
 
     return 0;
 }
