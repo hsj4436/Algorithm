@@ -5,9 +5,6 @@ int main() {
     std::string input;
     int order;
     while (std::cin >> input >> order) {
-        if (std::cin.eof()) {
-            break;
-        }
         int cycle = 1;
         for (int i = 2; i < input.size() + 1; i++) {
             cycle *= i;
