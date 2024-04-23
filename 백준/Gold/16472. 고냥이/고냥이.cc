@@ -7,56 +7,31 @@ int alphabet[27];
 int main() {
     std::cin >> N >> input;
 
-    int answer = 1;
-    int count = 1;
-    alphabet[input[0] - 'a']++;
+    int answer = 0;
+    int count = 0;
     int left = 0, right = 0;
-    while (true) {
+    for (; right < input.size(); right++) {
         if (count < N) {
-            if (right == input.size() - 1) {
-                if (left == input.size() - 1) {
-                    break;
-                }
-                alphabet[input[left] - 'a']--;
-                if (alphabet[input[left] - 'a'] == 0) {
-                    count--;
-                }
-                answer = std::max(answer, right - left + 1);
-                left++;
-            } else {
-                right++;
-                if (alphabet[input[right] - 'a'] == 0) {
-                    count++;
-                }
-                alphabet[input[right] - 'a']++;
+            if (alphabet[input[right] - 'a'] == 0) {
+                count++;
             }
+            alphabet[input[right] - 'a']++;
+            answer = std::max(answer, right - left + 1);
         } else if (count == N) {
-            if (right == input.size() - 1) {
-                if (left == input.size() - 1) {
-                    break;
-                }
-                alphabet[input[left] - 'a']--;
-                if (alphabet[input[left] - 'a'] == 0) {
-                    count--;
+            if (alphabet[input[right] - 'a'] == 0) {
+                count++;
+                alphabet[input[right] - 'a']++;
+                while (count > N) {
+                    alphabet[input[left] - 'a']--;
+                    if (alphabet[input[left] - 'a'] == 0) {
+                        count--;
+                    }
+                    left++;
                 }
                 answer = std::max(answer, right - left + 1);
-                left++;
             } else {
-                right++;
-                if (alphabet[input[right] - 'a'] == 0) {
-                    answer = std::max(answer, right - left);
-                    alphabet[input[right] - 'a']++;
-                    count++;
-                    while (count > N) {
-                        alphabet[input[left] - 'a']--;
-                        if (alphabet[input[left] - 'a'] == 0) {
-                            count--;
-                        }
-                        left++;
-                    }
-                } else {
-                    alphabet[input[right] - 'a']++;
-                }
+                alphabet[input[right] - 'a']++;
+                answer = std::max(answer, right - left + 1);
             }
         }
     }
