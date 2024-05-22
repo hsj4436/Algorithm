@@ -8,7 +8,7 @@ int dx[4] = {-1, 0, 1, 0};
 int dy[4] = {0, -1, 0, 1};
 
 int N, M;
-std::vector<PII> roomInfo[101][101];
+std::vector<PII > roomInfo[101][101];
 bool lighted[101][101];
 bool visited[101][101];
 
@@ -23,7 +23,7 @@ int main() {
     }
 
     int answer = 1;
-    std::queue<PII> q;
+    std::queue<PII > q;
     q.push({1, 1});
     visited[1][1] = true;
     lighted[1][1] = true;
@@ -32,23 +32,20 @@ int main() {
         PII cur = q.front();
         q.pop();
 
-        for (PII next : roomInfo[cur.first][cur.second]) {
+        for (PII next: roomInfo[cur.first][cur.second]) {
             if (lighted[next.first][next.second]) {
                 continue;
             }
             lighted[next.first][next.second] = true;
-            if (visited[next.first][next.second]) {
-                q.push(next);
-            } else {
-                for (int i = 0; i < 4; i++) {
-                    int nx = next.first + dx[i];
-                    int ny = next.second + dy[i];
-                    if (nx < 1 || nx > N || ny < 1 || ny > N) {
-                        continue;
-                    }
-                    if (visited[nx][ny]) {
-                        q.push({nx, ny});
-                    }
+
+            for (int i = 0; i < 4; i++) {
+                int nx = next.first + dx[i];
+                int ny = next.second + dy[i];
+                if (nx < 1 || nx > N || ny < 1 || ny > N) {
+                    continue;
+                }
+                if (visited[nx][ny]) {
+                    q.push({nx, ny});
                 }
             }
             answer++;
