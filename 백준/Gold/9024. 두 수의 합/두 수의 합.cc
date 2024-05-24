@@ -28,24 +28,13 @@ int main() {
             if (std::abs(sum - K) < maxDiff) {
                 maxDiff = std::abs(sum - K);
                 answer = 1;
-                if (sum - K < 0) {
-                    left++;
-                } else {
-                    right--;
-                }
             } else if (std::abs(sum - K) == maxDiff) {
                 answer++;
-                if (sum - K < 0) {
-                    left++;
-                } else {
-                    right--;
-                }
+            }
+            if (sum < K) {
+                left++;
             } else {
-                if (sum - K < 0) {
-                    left++;
-                } else {
-                    right--;
-                }
+                right--;
             }
         }
 
