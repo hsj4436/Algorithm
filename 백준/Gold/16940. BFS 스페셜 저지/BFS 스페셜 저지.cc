@@ -5,7 +5,7 @@
 
 int N;
 std::vector<int> edges[100001];
-std::vector<int> order;
+int order[100001];
 bool visited[100001];
 
 int main() {
@@ -19,45 +19,38 @@ int main() {
     }
 
     int o;
-    for (int i = 0; i < N; i++) {
+    for (int i = 1; i < N + 1; i++) {
         std::cin >> o;
-        order.push_back(o);
-        std::sort(edges[i + 1].begin(), edges[i + 1].end());
+        order[o] = i;
     }
 
-    if (order[0] != 1) {
-        std::cout << "0\n";
-        return 0;
+    for (int i = 1; i < N + 1; i++) {
+        std::sort(edges[i].begin(), edges[i].end(), [&](int a, int b) {
+            return order[a] < order[b];
+        });
     }
 
-    int orderIndex = 0;
-    std::queue<std::vector<int>> q;
-    q.push({1});
+    int orderSequence = 2;
+    std::queue<int> q;
+    q.push(1);
     visited[1] = true;
 
     while (!q.empty()) {
-        std::vector<int> cur = q.front();
+        int cur = q.front();
         q.pop();
 
-        int start = orderIndex, end = orderIndex + cur.size();
-        for (int i = 0; i < cur.size(); i++) {
-            if (!std::binary_search(cur.begin(), cur.end(), order[orderIndex])) {
+        for (int next : edges[cur]) {
+            if (visited[next]) {
+                continue;
+            }
+            if (order[next] == orderSequence) {
+                visited[next] = true;
+                q.push(next);
+                orderSequence++;
+            } else {
                 std::cout << "0\n";
                 return 0;
             }
-            orderIndex++;
-        }
-
-        for (int i = start; i < end; i++) {
-            std::vector<int> nextV;
-            for (int next : edges[order[i]]) {
-                if (visited[next]) {
-                    continue;
-                }
-                visited[next] = true;
-                nextV.push_back(next);
-            }
-            q.push(nextV);
         }
     }
 
