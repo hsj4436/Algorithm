@@ -40,7 +40,7 @@ int main() {
         q.pop();
 
         int start = orderIndex, end = orderIndex + cur.size();
-        for (int i : cur) {
+        for (int i = 0; i < cur.size(); i++) {
             if (!std::binary_search(cur.begin(), cur.end(), order[orderIndex])) {
                 std::cout << "0\n";
                 return 0;
