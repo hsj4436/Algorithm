@@ -3,9 +3,8 @@
 #include <queue>
 
 int N, K, M;
-std::vector<int> tubeAtStations[100001];
-std::vector<int> hyperTubes[100001];
-bool visited[100001];
+std::vector<int> stations[101001];
+int distance[101001];
 
 int main() {
     std::cin >> N >> K >> M;
@@ -14,41 +13,43 @@ int main() {
         int station;
         for (int j = 0; j < K; j++) {
             std::cin >> station;
-            tubeAtStations[station].push_back(i);
-            hyperTubes[i].push_back(station);
+            stations[station].push_back(i + N);
+            stations[i + N].push_back(station);
         }
     }
-    
+
     if (N == 1) {
         std::cout << 1 << "\n";
         return 0;
     }
 
+    std::fill_n(&distance[0], 101001, 200000);
+
     std::queue<std::pair<int, int>> q;
     q.push({1, 1});
-    visited[1] = true;
+    distance[1] = 1;
 
     while (!q.empty()) {
-        int usedTubes = q.front().first;
+        int passedStations = q.front().first;
         int currentStation = q.front().second;
         q.pop();
 
-        for (int nextTube : tubeAtStations[currentStation]) {
-            for (int nextStation : hyperTubes[nextTube]) {
-                if (!visited[nextStation]) {
-                    if (nextStation == N) {
-                        std::cout << usedTubes + 1 << "\n";
-                        return 0;
-                    } else {
-                        visited[nextStation] = true;
-                        q.push({usedTubes + 1, nextStation});
-                    }
-                }
+        for (int next : stations[currentStation]) {
+            if (next > N && passedStations < distance[next]) {
+                distance[next] = passedStations;
+                q.push({passedStations, next});
+            } else if (next <= N && passedStations + 1 < distance[next]){
+                distance[next] = passedStations + 1;
+                q.push({passedStations + 1, next});
             }
         }
     }
 
-    std::cout << -1 << "\n";
+    if (distance[N] == 200000) {
+        std::cout << -1 << "\n";
+    } else {
+        std::cout << distance[N] << "\n";
+    }
 
     return 0;
 }
