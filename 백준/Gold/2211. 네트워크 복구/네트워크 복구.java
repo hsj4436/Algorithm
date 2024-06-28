@@ -43,11 +43,7 @@ public class Main {
                 if (next.cost + dist < distance[next.to]) {
                     distance[next.to] = next.cost + dist;
                     pq.add(new Pair(next.to, distance[next.to]));
-                    if (Objects.isNull(answer.get(next.to))) {
-                        answer.put(next.to, new Pair(cur, next.cost));
-                    } else if (next.cost < answer.get(next.to).cost) {
-                        answer.put(next.to, new Pair(cur, next.cost));
-                    }
+                    answer.put(next.to, new Pair(cur, next.cost));
                 }
             }
         }
