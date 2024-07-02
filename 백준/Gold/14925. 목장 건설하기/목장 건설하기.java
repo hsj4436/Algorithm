@@ -33,7 +33,7 @@ public class Main {
                 sum[i][j] += sum[i][j - 1];
             }
         }
-
+        
         int answer = 0;
         for (int i = 1; i < M + 1; i++) {
             for (int j = 1; j < N + 1; j++) {
@@ -41,14 +41,13 @@ public class Main {
                     continue;
                 }
                 int maxLength = Math.min(i, j);
-                for (int k = maxLength; k > 0; k--) {
-                    if (k < answer) {
+                for (int k = 1; k <= maxLength; k++) {
+                    int groundSum = sum[i][j] - sum[i][j - k] - sum[i - k][j] + sum[i - k][j - k];
+                    if (groundSum != 0) {
                         break;
                     }
-                    int groundSum = sum[i][j] - sum[i][j - k] - sum[i - k][j] + sum[i - k][j - k];
-                    if (groundSum == 0 && k > answer) {
+                    if (k > answer) {
                         answer = k;
-                        break;
                     }
                 }
             }
