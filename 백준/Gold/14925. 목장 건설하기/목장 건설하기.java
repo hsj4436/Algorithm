@@ -37,6 +37,9 @@ public class Main {
         int answer = 0;
         for (int i = 1; i < M + 1; i++) {
             for (int j = 1; j < N + 1; j++) {
+                if (ground[i][j] != 0) {
+                    continue;
+                }
                 int maxLength = Math.min(i, j);
                 for (int k = maxLength; k > 0; k--) {
                     if (k < answer) {
