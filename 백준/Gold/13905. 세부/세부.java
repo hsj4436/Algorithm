@@ -1,16 +1,15 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
     static int N, M;
     static int S, E;
-    static List<List<Integer>>[] graph;
+    static int[] parent;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,71 +18,74 @@ public class Main {
         N = Integer.parseInt(stk.nextToken());
         M = Integer.parseInt(stk.nextToken());
 
-        graph = new List[N + 1];
+        parent = new int[N + 1];
         for (int i = 1; i < N + 1; i++) {
-            graph[i] = new ArrayList<>();
+            parent[i] = i;
         }
 
         stk = new StringTokenizer(br.readLine());
         S = Integer.parseInt(stk.nextToken());
         E = Integer.parseInt(stk.nextToken());
 
+        List<Edge> edges = new ArrayList<>();
         int h1, h2, k;
         for (int i = 0; i < M; i++) {
             stk = new StringTokenizer(br.readLine());
             h1 = Integer.parseInt(stk.nextToken());
             h2 = Integer.parseInt(stk.nextToken());
             k = Integer.parseInt(stk.nextToken());
-            List<Integer> edge1 = new ArrayList<>();
-            edge1.add(h2);
-            edge1.add(k);
-            graph[h1].add(edge1);
-
-            List<Integer> edge2 = new ArrayList<>();
-            edge2.add(h1);
-            edge2.add(k);
-            graph[h2].add(edge2);
+            edges.add(new Edge(h1, h2, k));
         }
+        
+        Collections.sort(edges);
 
-        int answer = 0;
-        int left = 1, right = 1000001;
-        while (left <= right) {
-            int mid = (left + right) / 2;
+        for (Edge e : edges) {
+            int ph1 = findParent(e.h1);
+            int ph2 = findParent(e.h2);
 
-            if (bfs(mid)) {
-                left = mid + 1;
+            if (ph1 == ph2) {
+                continue;
+            }
+            if (ph1 < ph2) {
+                parent[ph2] = ph1;
             } else {
-                right = mid - 1;
-                answer = right;
+                parent[ph1] = ph2;
+            }
+            if (findParent(S) == findParent(E)) {
+                System.out.println(e.k);
+                return;
             }
         }
-        System.out.println(answer);
+        
+        System.out.println(0);
     }
 
-    static boolean bfs(int weight) {
-        boolean[] visited = new boolean[N + 1];
-        visited[S] = true;
-        Queue<Integer> q = new ArrayDeque<>();
-        q.offer(S);
-
-        while (!q.isEmpty()) {
-            int cur = q.poll();
-
-            if (cur == E) {
-                return true;
-            }
-
-            for (List<Integer> next : graph[cur]) {
-                if (visited[next.get(0)]) {
-                    continue;
-                }
-                if (next.get(1) < weight) {
-                    continue;
-                }
-                visited[next.get(0)] = true;
-                q.offer(next.get(0));
-            }
+    static int findParent(int target) {
+        if (parent[target] == target) {
+            return target;
+        } else {
+            return parent[target] = findParent(parent[target]);
         }
-        return false;
+    }
+
+    static class Edge implements Comparable<Edge> {
+
+        int h1;
+        int h2;
+        int k;
+
+        Edge() {
+        }
+
+        Edge(int h1, int h2, int k) {
+            this.h1 = h1;
+            this.h2 = h2;
+            this.k = k;
+        }
+
+        @Override
+        public int compareTo(Edge e) {
+            return e.k - this.k;
+        }
     }
 }
