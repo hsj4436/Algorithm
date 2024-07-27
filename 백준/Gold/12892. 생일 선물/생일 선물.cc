@@ -28,23 +28,16 @@ int main() {
 
     LL answer = 0;
     int left = 0, right = 0;
-    LL sum = presents[0].second;
-    while (left < N) {
+    LL sum = 0;
+    while (left <= right && right < presents.size()) {
         if (presents[right].first - presents[left].first < D) {
-            answer = std::max(answer, sum);
-        }
-        if (presents[right].first - presents[left].first >= D) {
+            sum += presents[right].second;
+            right++;
+        } else {
             sum -= presents[left].second;
             left++;
-        } else {
-            if (right == N - 1) {
-                sum -= presents[left].second;
-                left++;
-            } else {
-                right++;
-                sum += presents[right].second;
-            }
         }
+        answer = std::max(answer, sum);
     }
 
     std::cout << answer << "\n";
