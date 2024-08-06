@@ -36,16 +36,27 @@ int main() {
 
     int counter = 0;
     while (!isEnd()) {
-        if (counter > 100000 * N) {
-            std::cout << "-1\n";
-            return 0;
-        }
-
         std::vector<int> temp(N, 0);
         for (int i = 0; i < N; i++) {
             temp[S[i]] = cards[i];
         }
+
         cards = temp;
+
+        if (counter > 0) {
+            bool isOrigin = true;
+            for (int i = 0; i < N; i++) {
+                if (cards[i] != i) {
+                    isOrigin = false;
+                    break;
+                }
+            }
+            if (isOrigin) {
+                std::cout << "-1\n";
+                return 0;
+            }
+        }
+
         counter++;
     }
 
