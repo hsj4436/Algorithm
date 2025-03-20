@@ -29,19 +29,62 @@ int main() {
     int answer = 200000001;
 
     for (int i = 0; i < A; i++) {
-        auto j = std::lower_bound(Bs, Bs + B, As[i] - answer);
-        for (; j < Bs + B; j++) {
-            auto k = std::lower_bound(Cs, Cs + C, As[i] - answer);
-            for (; k < Cs + C; k++) {
-                int score = std::max(As[i], std::max(*j, *k)) - std::min(As[i], std::min(*j, *k));
-                if (score > 2 * answer) {
-                    break;
-                }
-                if (score < answer) {
-                    answer = score;
-                }
+        int left = 0, right = B - 1;
+        int b = Bs[(left + right) / 2];
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (Bs[mid] == As[i]) {
+                b = Bs[mid];
+                break;
+            } else if (Bs[mid] < As[i]) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+            if (std::abs(As[i] - b) > std::abs(As[i] - Bs[mid])) {
+                b = Bs[mid];
             }
         }
+
+        left = 0, right = C - 1;
+        int c1 = Cs[(left + right) / 2];
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (Cs[mid] == As[i]) {
+                c1 = Cs[mid];
+                break;
+            } else if (Cs[mid] < As[i]) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+            if (std::abs(As[i] - c1) > std::abs(As[i] - Cs[mid])) {
+                c1 = Cs[mid];
+            }
+        }
+
+        left = 0, right = C - 1;
+        int c2 = Cs[(left + right) / 2];
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (Cs[mid] == b) {
+                c2 = Cs[mid];
+                break;
+            } else if (Cs[mid] < b) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+            if (std::abs(b - c2) > std::abs(b - Cs[mid])) {
+                c2 = Cs[mid];
+            }
+        }
+
+        int score = std::max(As[i], std::max(b, c1)) - std::min(As[i], std::min(b, c1));
+        answer = std::min(answer, score);
+
+        score = std::max(As[i], std::max(b, c2)) - std::min(As[i], std::min(b, c2));
+        answer = std::min(answer, score);
     }
 
     std::cout << answer << "\n";
