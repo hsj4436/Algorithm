@@ -1,14 +1,18 @@
 #include <iostream>
 
+int N;
+int forest[501][501];
+int dp[501][501];
+
 int dx[4] = {-1, 0, 1, 0};
 int dy[4] = {0, -1, 0, 1};
 
-int N;
-int forest[500][500];
-int path[500][500];
+int move(int x, int y) {
+    if (dp[x][y] != -1) {
+        return dp[x][y];
+    }
 
-int dfs(int x, int y) {
-    path[x][y] = 0;
+    dp[x][y] = 0;
     for (int i = 0; i < 4; i++) {
         int nx = x + dx[i];
         int ny = y + dy[i];
@@ -21,19 +25,12 @@ int dfs(int x, int y) {
             continue;
         }
 
-        if (path[nx][ny] != 0) {
-            path[x][y] = std::max(path[x][y], path[nx][ny] + 1);
-            continue;
-        }
-
-        path[x][y] = std::max(path[x][y], dfs(nx, ny) + 1);
+        dp[x][y] = std::max(dp[x][y], move(nx, ny));
     }
 
-    if (path[x][y] == 0) {
-        return path[x][y] = 1;
-    } else {
-        return path[x][y];
-    }
+    dp[x][y]++;
+
+    return dp[x][y];
 }
 
 int main() {
@@ -42,17 +39,14 @@ int main() {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             std::cin >> forest[i][j];
+            dp[i][j] = -1;
         }
     }
 
     int answer = 0;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            if (path[i][j] != 0) {
-                answer = std::max(answer, path[i][j]);
-            } else {
-                answer = std::max(answer, dfs(i, j));
-            }
+            answer = std::max(move(i, j), answer);
         }
     }
 
