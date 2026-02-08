@@ -2,9 +2,12 @@ import java.util.*;
 
 class Solution {
     
+    private static final int INF = 987654321;
+    
     private List<Integer>[] graph;
     private Queue<int[]> q; // {current position, used time}
     private boolean[] visited;
+    private int[] fromDestination;
     
     public int[] solution(int n, int[][] roads, int[] sources, int destination) {
         int[] answer = new int[sources.length];
@@ -20,41 +23,39 @@ class Solution {
             graph[b].add(a);
         }
         
-        for (int i = 0; i < sources.length; i++) {
-            answer[i] = -1;
-            if (sources[i] == destination) {
-                answer[i] = 0;
-                continue;
-            }
-            visited = new boolean[n + 1];
-            visited[0] = true;
-            visited[sources[i]] = true;
-            q = new LinkedList<>();
-            q.add(new int[]{sources[i], 0});
-            
-            while (!q.isEmpty()) {
-                int[] cur = q.poll();
-                
-                boolean isEnd = false;
-                for (int next : graph[cur[0]]) {
-                    if (visited[next]) {
-                        continue;
-                    }
-                    visited[next] = true;
-                    q.add(new int[]{next, cur[1] + 1});
-                    if (next == destination) {
-                        isEnd = true;
-                        answer[i] = cur[1] + 1;
-                        break;
-                    }
+        visited = new boolean[n + 1];
+        visited[0] = true;
+        visited[destination] = true;
+        
+        fromDestination = new int[n + 1];
+        for (int i = 0; i < n + 1; i++) {
+            fromDestination[i] = INF;
+        }
+        
+        fromDestination[destination] = 0;
+        q = new LinkedList<>();
+        q.add(new int[]{destination, 0});
+
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+
+            for (int next : graph[cur[0]]) {
+                if (visited[next]) {
+                    continue;
                 }
-                if (isEnd) {
-                    break;
-                }
+                visited[next] = true;
+                q.add(new int[]{next, cur[1] + 1});
+                fromDestination[next] = cur[1] + 1;
             }
         }
         
-        
+        for (int i = 0; i < sources.length; i++) {
+            if (fromDestination[sources[i]] == INF) {
+                answer[i] = -1;
+            } else {
+                answer[i] = fromDestination[sources[i]];
+            }
+        }
         
         return answer;
     }
