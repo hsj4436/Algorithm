@@ -30,35 +30,35 @@ public class Main {
             int minIndex = lowerBound(maxArr, min) + 1;
             System.out.print(minIndex + " ");
             int max = arr[i][0] + arr[i][1];
-            int maxIndex = upperBound(minArr, max) + 1;
+            int maxIndex = upperBound(minArr, max);
             System.out.println(maxIndex);
         }
     }
 
     private static int lowerBound(int[] arr, int target) {
-        int left = 0, right = arr.length - 1;
-        while (left <= right) {
+        int left = 0, right = arr.length;
+        while (left < right) {
             int mid = (left + right) / 2;
 
             if (arr[mid] < target) {
                 left = mid + 1;
             } else {
-                right = mid - 1;
+                right = mid;
             }
         }
 
-        return left;
+        return right;
     }
 
     private static int upperBound(int[] arr, int target) {
-        int left = 0, right = arr.length - 1;
-        while (left <= right) {
+        int left = 0, right = arr.length;
+        while (left < right) {
             int mid = (left + right) / 2;
 
             if (arr[mid] <= target) {
                 left = mid + 1;
             } else {
-                right = mid - 1;
+                right = mid;
             }
         }
 
