@@ -2,12 +2,14 @@ import java.util.*;
 
 class Solution {
     public String solution(String s) {
-        int[] arr = Arrays.stream(s.split(" ")).mapToInt(Integer::parseInt).toArray();
-        List<Integer> ls = new ArrayList<>();
-        for (int i : arr) {
-            ls.add(i);
+        String[] arr = s.split(" ");
+        int min = Integer.parseInt(arr[0]);
+        int max = min;
+        for (int i = 1; i < arr.length; i++) {
+            min = Math.min(min, Integer.parseInt(arr[i]));
+            max = Math.max(max, Integer.parseInt(arr[i]));
         }
         
-        return String.valueOf(Collections.min(ls)) + " " + String.valueOf(Collections.max(ls));
+        return min + " " + max;
     }
 }
